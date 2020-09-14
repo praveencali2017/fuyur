@@ -218,3 +218,4 @@ class ArtistForm(Form):
     )
 
 # TODO IMPLEMENT NEW ARTIST FORM AND NEW SHOW FORM
+# Should we need to do anything more that what is done ????? readme says complete
