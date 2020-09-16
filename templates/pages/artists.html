@@ -1,7 +1,7 @@
 {% extends 'layouts/main.html' %}
 {% block title %}Fyyur | Artists{% endblock %}
 {% block content %}
-<ul class="items">
+<ul class="items" style="margin-top:15px;">
 	{% for artist in artists %}
 	<li>
 		<a href="/artists/{{ artist.id }}">

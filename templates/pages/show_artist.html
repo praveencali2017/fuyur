@@ -26,6 +26,14 @@
 		<p>
 			<i class="fab fa-facebook-f"></i> {% if artist.facebook_link %}<a href="{{ artist.facebook_link }}" target="_blank">{{ artist.facebook_link }}</a>{% else %}No Facebook Link{% endif %}
         </p>
+		{% if artist.available_from and artist.available_to %}
+			<p>
+				Availability:
+        	</p>
+			<p>
+				From: {{ artist.available_from}} To: {{ artist.available_to}}
+        	</p>
+		{% endif %}
 		{% if artist.seeking_venue %}
 		<div class="seeking">
 			<p class="lead">Currently seeking performance venues</p>
@@ -40,7 +48,7 @@
 		{% endif %}
 	</div>
 	<div class="col-sm-6">
-		<img src="{{ artist.image_link }}" alt="Venue Image" />
+		<img src="{{ artist.image_link }}" alt="Artist Image" />
 	</div>
 </div>
 <section>
