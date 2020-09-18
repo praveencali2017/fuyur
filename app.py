@@ -44,7 +44,7 @@ if app.config['DB_NAME'] not in all_dbs:
 #----------------------------------------------------------------------------#
 from datetime import datetime
 class Venue(db.Model):
-    __tablename__ = 'Venue'
+    __tablename__ = 'venues'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
@@ -65,7 +65,7 @@ class Venue(db.Model):
     created_at = db.Column(db.DateTime, default = datetime.now(), nullable=False)
 
 class Artist(db.Model):
-    __tablename__ = 'Artist'
+    __tablename__ = 'artists'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
@@ -78,7 +78,7 @@ class Artist(db.Model):
 
     # Done: implement any missing fields, as a database migration using Flask-Migrate
     website = db.Column(db.String(120))
-    seeking_venue = db.Column(db.Boolean, default = False),
+    seeking_venue = db.Column(db.Boolean, default = False)
     seeking_description = db.Column(db.String(500))
     artist_shows = db.relationship('Show', backref='Artist', cascade='all, delete, delete-orphan', lazy=True)
     # # let's create created_at for sorting instead of sorting by id (might not be apt if id seq is resets)
@@ -88,10 +88,10 @@ class Artist(db.Model):
 
 # Done Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
 class Show(db.Model):
-  __tablename__ = 'Show'
+  __tablename__ = 'shows'
   id = db.Column(db.Integer, primary_key=True)
-  artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id', ondelete='CASCADE'), nullable=False)
-  venue_id =  db.Column(db.Integer, db.ForeignKey('Venue.id', ondelete='CASCADE'), nullable=False)
+  artist_id = db.Column(db.Integer, db.ForeignKey('artists.id', ondelete='CASCADE'), nullable=False)
+  venue_id =  db.Column(db.Integer, db.ForeignKey('venues.id', ondelete='CASCADE'), nullable=False)
   start_time = db.Column(db.DateTime(timezone=True))
 
   # let's create created_at for sorting instead of sorting by id (might not be apt if id seq is resets)
@@ -148,95 +148,95 @@ def insert_dummy_values(model, dummy_values):
     if instance is not None:
       db.session.add(instance)
       db.session.commit()
-# dummy samples
-venue_sample_1 = {
-    "name": "The Musical Hop",
-    "genres": ["Jazz", "Reggae", "Swing", "Classical", "Folk"],
-    "address": "1015 Folsom Street",
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "123-123-1234",
-    "website": "https://www.themusicalhop.com",
-    "facebook_link": "https://www.facebook.com/TheMusicalHop",
-    "seeking_talent": True,
-    "seeking_description": "We are on the lookout for a local artist to play every two weeks. Please call us.",
-    "image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60"}
-venue_sample_2 = {
-  "name": "The Dueling Pianos Bar",
-  "genres": ["Classical", "R&B", "Hip-Hop"],
-  "address": "335 Delancey Street",
-  "city": "New York",
-  "state": "NY",
-  "phone": "914-003-1132",
-  "website": "https://www.theduelingpianos.com",
-  "facebook_link": "https://www.facebook.com/theduelingpianos",
-  "seeking_talent": False,
-  "image_link": "https://images.unsplash.com/photo-1497032205916-ac775f0649ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
-}
-venue_sample_3 = {
-  "name": "Park Square Live Music & Coffee",
-  "genres": ["Rock n Roll", "Jazz", "Classical", "Folk"],
-  "address": "34 Whiskey Moore Ave",
-  "city": "San Francisco",
-  "state": "CA",
-  "phone": "415-000-1234",
-  "website": "https://www.parksquarelivemusicandcoffee.com",
-  "facebook_link": "https://www.facebook.com/ParkSquareLiveMusicAndCoffee",
-  "seeking_talent": False,
-  "image_link": "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=747&q=80"
-}
-# Artists----------
-artist_sample_1 = {
-    "name": "Guns N Petals",
-    "genres": ["Rock n Roll"],
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "326-123-5000",
-    "website": "https://www.gunsnpetalsband.com",
-    "facebook_link": "https://www.facebook.com/GunsNPetals",
-    "seeking_venue": True,
-    "seeking_description": "Looking for shows to perform at in the San Francisco Bay Area!",
-    "image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80"}
-artist_sample_2 = {
-    "name": "Matt Quevedo",
-    "genres": ["Jazz"],
-    "city": "New York",
-    "state": "NY",
-    "phone": "300-400-5000",
-    "facebook_link": "https://www.facebook.com/mattquevedo923251523",
-    "seeking_venue": False,
-    "image_link": "https://images.unsplash.com/photo-1495223153807-b916f75de8c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"}
-
-artist_sample_3 = {
-    "name": "The Wild Sax Band",
-    "genres": ["Jazz", "Classical"],
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "432-325-5432",
-    "seeking_venue": False,
-    "image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80"}
-
-show_samples = [{
-    "venue_id": 1,
-    "artist_id": 1,
-    "start_time": "2019-05-21T21:30:00.000Z"
-  }, {
-    "venue_id": 3,
-    "artist_id": 2,
-    "start_time": "2019-06-15T23:00:00.000Z"
-  }, {
-    "venue_id": 3,
-    "artist_id": 3,
-    "start_time": "2035-04-01T20:00:00.000Z"
-  }, {
-    "venue_id": 3,
-    "artist_id": 3,
-    "start_time": "2035-04-08T20:00:00.000Z"
-  }, {
-    "venue_id": 3,
-    "artist_id": 3,
-    "start_time": "2035-04-15T20:00:00.000Z"
-  }]
+# dummy samples for data seed!!!!
+# venue_sample_1 = {
+#     "name": "The Musical Hop",
+#     "genres": ["Jazz", "Reggae", "Swing", "Classical", "Folk"],
+#     "address": "1015 Folsom Street",
+#     "city": "San Francisco",
+#     "state": "CA",
+#     "phone": "123-123-1234",
+#     "website": "https://www.themusicalhop.com",
+#     "facebook_link": "https://www.facebook.com/TheMusicalHop",
+#     "seeking_talent": True,
+#     "seeking_description": "We are on the lookout for a local artist to play every two weeks. Please call us.",
+#     "image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60"}
+# venue_sample_2 = {
+#   "name": "The Dueling Pianos Bar",
+#   "genres": ["Classical", "R&B", "Hip-Hop"],
+#   "address": "335 Delancey Street",
+#   "city": "New York",
+#   "state": "NY",
+#   "phone": "914-003-1132",
+#   "website": "https://www.theduelingpianos.com",
+#   "facebook_link": "https://www.facebook.com/theduelingpianos",
+#   "seeking_talent": False,
+#   "image_link": "https://images.unsplash.com/photo-1497032205916-ac775f0649ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
+# }
+# venue_sample_3 = {
+#   "name": "Park Square Live Music & Coffee",
+#   "genres": ["Rock n Roll", "Jazz", "Classical", "Folk"],
+#   "address": "34 Whiskey Moore Ave",
+#   "city": "San Francisco",
+#   "state": "CA",
+#   "phone": "415-000-1234",
+#   "website": "https://www.parksquarelivemusicandcoffee.com",
+#   "facebook_link": "https://www.facebook.com/ParkSquareLiveMusicAndCoffee",
+#   "seeking_talent": False,
+#   "image_link": "https://images.unsplash.com/photo-1485686531765-ba63b07845a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=747&q=80"
+# }
+# # Artists----------
+# artist_sample_1 = {
+#     "name": "Guns N Petals",
+#     "genres": ["Rock n Roll"],
+#     "city": "San Francisco",
+#     "state": "CA",
+#     "phone": "326-123-5000",
+#     "website": "https://www.gunsnpetalsband.com",
+#     "facebook_link": "https://www.facebook.com/GunsNPetals",
+#     "seeking_venue": True,
+#     "seeking_description": "Looking for shows to perform at in the San Francisco Bay Area!",
+#     "image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80"}
+# artist_sample_2 = {
+#     "name": "Matt Quevedo",
+#     "genres": ["Jazz"],
+#     "city": "New York",
+#     "state": "NY",
+#     "phone": "300-400-5000",
+#     "facebook_link": "https://www.facebook.com/mattquevedo923251523",
+#     "seeking_venue": False,
+#     "image_link": "https://images.unsplash.com/photo-1495223153807-b916f75de8c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"}
+#
+# artist_sample_3 = {
+#     "name": "The Wild Sax Band",
+#     "genres": ["Jazz", "Classical"],
+#     "city": "San Francisco",
+#     "state": "CA",
+#     "phone": "432-325-5432",
+#     "seeking_venue": False,
+#     "image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80"}
+#
+# show_samples = [{
+#     "venue_id": 1,
+#     "artist_id": 1,
+#     "start_time": "2019-05-21T21:30:00.000Z"
+#   }, {
+#     "venue_id": 3,
+#     "artist_id": 2,
+#     "start_time": "2019-06-15T23:00:00.000Z"
+#   }, {
+#     "venue_id": 3,
+#     "artist_id": 3,
+#     "start_time": "2035-04-01T20:00:00.000Z"
+#   }, {
+#     "venue_id": 3,
+#     "artist_id": 3,
+#     "start_time": "2035-04-08T20:00:00.000Z"
+#   }, {
+#     "venue_id": 3,
+#     "artist_id": 3,
+#     "start_time": "2035-04-15T20:00:00.000Z"
+#   }]
 # -------------------End of samples ---------------------------
 
 @app.route('/venues')
@@ -312,7 +312,12 @@ def show_venue(venue_id):
   # shows the venue page with the given venue_id
   # Done: replace with real venue data from the venues table, using venue_id
   venue = db.session.query(Venue).filter_by(id = venue_id).first()
-  past_shows, upcoming_shows = get_past_upcoming_shows(Show.venue_id == venue_id, 'artist')
+  past_clause = (Show.start_time < datetime.now(pytz.utc))
+  upcoming_clause = (Show.start_time > datetime.now(pytz.utc))
+  past_shows = db.session.query(Show).join(Venue).filter(Venue.id == venue_id).filter(past_clause).all()
+  upcoming_shows = db.session.query(Show).join(Venue).filter(Venue.id == venue_id).filter(upcoming_clause).all()
+  past_shows, upcoming_shows = get_past_upcoming_shows(past_shows=past_shows, upcoming_shows=upcoming_shows,
+                                                       for_artists_venue='artist')
   genres = []
   if venue.genres is not None:
       genres = venue.genres.split(',')
@@ -435,18 +440,13 @@ def search_artists():
   }
   return render_template('pages/search_artists.html', results=response, search_term=search_term, city_state_text= city_state_text )
 
-def get_past_upcoming_shows(where_clause, for_artists_venue:str):
+def get_past_upcoming_shows(past_shows, upcoming_shows, for_artists_venue:str):
     """
     Get past and upcoming artist shows/ venues
     :param where_clause: Artist or Venue where clause
     :param for_artists_venue: 'artist' or 'venue' events
     :return: (list)past, (list)upcoming events
     """
-    import pytz
-    past_shows = db.session.query(Show).filter(where_clause).filter(
-        Show.start_time < datetime.now(pytz.utc)).all()
-    upcoming_shows = db.session.query(Show).filter(where_clause).filter(
-        Show.start_time >= datetime.now(pytz.utc)).all()
     past_shows_list = []
     upcoming_shows_list = []
     show_keys = ['start_time']
@@ -485,8 +485,14 @@ def get_past_upcoming_shows(where_clause, for_artists_venue:str):
 def show_artist(artist_id):
   # shows the venue page with the given venue_id
   # Done: replace with real venue data from the venues table, using venue_id
-  artist = db.session.query(Artist).filter_by(id = artist_id).first()
-  past_shows, upcoming_shows = get_past_upcoming_shows(Show.artist_id == artist_id, 'venue')
+  import pytz
+  artist = db.session.query(Artist).filter_by(id=artist_id).first()
+  past_clause = (Show.start_time < datetime.now(pytz.utc))
+  upcoming_clause = (Show.start_time > datetime.now(pytz.utc))
+  past_shows = db.session.query(Show).join(Artist).filter(Artist.id == artist_id).filter(past_clause).all()
+  upcoming_shows = db.session.query(Show).join(Artist).filter(Artist.id == artist_id).filter(upcoming_clause).all()
+  past_shows, upcoming_shows = get_past_upcoming_shows(past_shows= past_shows, upcoming_shows= upcoming_shows,
+                                                       for_artists_venue='venue')
   artist_shows={
     "id": artist.id,
     "name": artist.name,
